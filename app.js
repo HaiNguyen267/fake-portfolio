@@ -47,13 +47,14 @@ const themes = ['yellow-theme', 'red-theme', 'green-theme', 'blue-theme'];
 const projectImages = document.getElementsByClassName("project-img");
 
 
+loadChosenTheme();
+
 for (let i = 0; i < circles.length; i++) {
     circles[i].addEventListener("click", e => {
         e.preventDefault();
 
-        checkCircles(circles[i]);
-        changeTheme(themes[i]);
-        changeProjectImages(images[i]);
+        switchTheme(i);
+        saveChosenTheme(i);
     })
 }
 
@@ -67,7 +68,7 @@ function checkCircles(circleToCheck) {
     })
 }
 
-function changeTheme(theme) {
+function changeThemeColor(theme) {
     document.body.className = theme;
 }
 
@@ -75,4 +76,28 @@ function changeProjectImages(images) {
     for (let i = 0; i < projectImages.length; i++) {
         projectImages[i].src = images[i];
     }
+}
+
+function loadChosenTheme() {
+
+    if (localStorage.getItem("checked-theme") !== null) {
+        json = JSON.parse(localStorage.getItem("checked-theme"));
+        chosenTheme = json["theme"];
+
+        let themeIndex = themes.indexOf(chosenTheme);
+        switchTheme(themeIndex);
+    }
+    
+}
+
+function saveChosenTheme(themeIndex) {
+    let json = {theme: themes[themeIndex]}
+    localStorage.setItem("checked-theme", JSON.stringify(json));
+
+}
+
+function switchTheme(themeIndex) {
+    checkCircles(circles[themeIndex]);
+    changeThemeColor(themes[themeIndex]);
+    changeProjectImages(images[themeIndex]);
 }
